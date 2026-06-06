@@ -12,7 +12,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Install Dependencies
         run: |
@@ -20,7 +20,7 @@ jobs:
           npm install rn-mlkit-ocr --legacy-peer-deps
 
       - name: Generate Native Android Folder
-        run: npx expo prebuild --platform android --skip-dependency-validation
+        run: npx expo prebuild --platform android
 
       - name: Compile APK via Gradle
         run: |
