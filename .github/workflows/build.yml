@@ -1,0 +1,30 @@
+name: Build Android APK
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build local APK
+        run: npx expo prebuild && cd android && ./gradlew assembleRelease
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CestApp-Belegscanner
+          path: android/app/build/outputs/apk/release/app-release.apk
