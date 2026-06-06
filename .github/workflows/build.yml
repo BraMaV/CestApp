@@ -12,18 +12,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-
-      - name: Install EAS CLI
-        run: npm install -g eas-cli
+          node-version: 18
 
       - name: Install Dependencies
-        run: npm install --legacy-peer-deps
+        run: |
+          npm install --legacy-peer-deps
+          npm install rn-mlkit-ocr --legacy-peer-deps
 
-      - name: Build local APK
-        env:
-          NODE_OPTIONS: "--openssl-legacy-provider"
-        run: npx expo prebuild && cd android && ./gradlew assembleRelease
+      - name: Generate Native Android Folder
+        run: npx expo prebuild --platform android --skip-dependency-validation
+
+      - name: Compile APK via Gradle
+        run: |
+          cd android
+          ./gradlew assembleRelease --no-daemon
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
